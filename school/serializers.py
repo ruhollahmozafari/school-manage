@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
@@ -42,3 +43,18 @@ class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ('__all__')
+
+
+class CertificateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Certificate
+        fields = ('id', 'name', 'description')
+
+
+class StudentCertificateSerializer(serializers.ModelSerializer):
+      
+    class Meta:
+        model = StudentsCertificate
+        fields = ('id','user', 'certificate',)
+ 

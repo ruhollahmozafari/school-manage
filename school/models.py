@@ -5,6 +5,20 @@ from django.contrib.auth.models import (
 )
 
 
+class AbstractTableMeta(models.Model):
+    created_at = models.DateField(auto_now_add=True, null = True, blank= True)
+    updated_at = models.DateField(auto_now=True, null = True, blank= True)
+    created_by = models.ForeignKey('school.User', null= True, blank= True ,
+                                   on_delete=models.DO_NOTHING,
+                                   related_name='+')
+    modified_by = models.ForeignKey('school.User', null = True, blank= True,
+                                    on_delete=models.DO_NOTHING,
+                                    related_name='+')
+
+    class Meta:
+        abstract = True
+
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None):
         if not email:
@@ -76,3 +90,27 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+
+class Certificate(AbstractTableMeta, models.Model):
+    name = models.CharField(blank = True, null =True , max_length=50)
+    description = models.TextField(blank= True, null =True , max_length= 1000)
+
+    def __str__(self):
+        return self.name
+
+
+class StudentsCertificate(AbstractBaseUser, models.Model):
+    user = models.ForeignKey("school.User", null =True, blank = True ,on_delete=models.CASCADE)
+    certificate = models.ForeignKey("school.Certificate", null =True, blank = True ,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user} got {self.certificate}'
+
+
+class ClassRoom(models.Model):
+    name = models.CharField(max_length=50)
+    start_date = models.DateField()
+    created_date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    
+
